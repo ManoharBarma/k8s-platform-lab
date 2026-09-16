@@ -21,6 +21,9 @@ spec:
           strategy: anonymous
         server:
           web_root: /kiali
+        external_services:
+          prometheus:
+            url: http://prometheus-server.monitoring.svc:80
         deployment:
           ingress:
             enabled: true
