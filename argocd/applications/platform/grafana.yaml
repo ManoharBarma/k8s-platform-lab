@@ -22,7 +22,7 @@ spec:
           enabled: false
         grafana.ini:
           server:
-            root_url: "%(protocol)s://%(domain)s/grafana/"
+            root_url: /grafana/
             serve_from_sub_path: true
           auth.anonymous:
             enabled: true
@@ -31,6 +31,8 @@ spec:
           enabled: true
           ingressClassName: nginx
           path: /grafana
+          pathType: Prefix
+          hosts: []
           annotations:
             nginx.ingress.kubernetes.io/ssl-redirect: "false"
         datasources:
