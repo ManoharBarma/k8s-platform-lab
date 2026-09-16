@@ -1,0 +1,41 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: kiali
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "3"
+  labels:
+    app.kubernetes.io/name: kiali
+    app.kubernetes.io/part-of: k8s-platform-lab
+spec:
+  project: platform-project
+  source:
+    repoURL: https://kiali.org/helm-charts
+    chart: kiali-server
+    targetRevision: 1.89.0
+    helm:
+      releaseName: kiali-server
+      values: |
+        auth:
+          strategy: anonymous
+        server:
+          web_root: /kiali
+        deployment:
+          ingress:
+            enabled: true
+            class_name: nginx
+            override_yaml:
+              metadata:
+                annotations:
+                  nginx.ingress.kubernetes.io/ssl-redirect: "false"
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: kiali
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true
