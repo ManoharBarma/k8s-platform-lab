@@ -40,13 +40,15 @@ spec:
             httpGet:
               path: /status/200
               port: 80
-            initialDelaySeconds: 5
+            initialDelaySeconds: 15
             periodSeconds: 10
-            timeoutSeconds: 2
+            timeoutSeconds: 5
+            failureThreshold: 6
           readinessProbe:
             httpGet:
               path: /status/200
               port: 80
-            initialDelaySeconds: 3
+            initialDelaySeconds: 10
             periodSeconds: 5
-            timeoutSeconds: 2
+            timeoutSeconds: 5
+            failureThreshold: 6
