@@ -7,14 +7,12 @@ metadata:
     app.kubernetes.io/name: platform-project
     app.kubernetes.io/part-of: k8s-platform-lab
 spec:
-  description: "Argo CD Project for cluster platform components (Istio config, observability, Kiali)"
+  description: "Argo CD Project for Istio Ambient mesh platform components"
   
   # Repositories permitted for this project
   sourceRepos:
     - "https://github.com/ManoharBarma/k8s-platform-lab.git"
-    - "https://github.com/kubernetes-sigs/gateway-api.git"
-    - "https://prometheus-community.github.io/helm-charts"
-    - "https://kiali.org/helm-charts"
+    - "https://istio-release.storage.googleapis.com/charts"
 
   # Scoped destination namespaces
   destinations:
@@ -22,17 +20,11 @@ spec:
       server: https://kubernetes.default.svc
     - namespace: ambient-demo
       server: https://kubernetes.default.svc
-    - namespace: monitoring
-      server: https://kubernetes.default.svc
-    - namespace: kiali
-      server: https://kubernetes.default.svc
 
-  # Strictly scoped cluster-level resources required by monitoring, gateway API, and CRDs
+  # Strictly scoped cluster-level resources required by CRDs
   clusterResourceWhitelist:
     - group: ""
       kind: Namespace
-    - group: "gateway.networking.k8s.io"
-      kind: GatewayClass
     - group: "apiextensions.k8s.io"
       kind: CustomResourceDefinition
     - group: "rbac.authorization.k8s.io"
@@ -55,10 +47,6 @@ spec:
     - group: "networking.istio.io"
       kind: "*"
     - group: "security.istio.io"
-      kind: "*"
-    - group: "gateway.networking.k8s.io"
-      kind: "*"
-    - group: "monitoring.coreos.com"
       kind: "*"
     - group: "rbac.authorization.k8s.io"
       kind: "*"
