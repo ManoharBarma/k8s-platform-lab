@@ -12,6 +12,7 @@ spec:
   # Repositories permitted for this project
   sourceRepos:
     - "https://github.com/ManoharBarma/k8s-platform-lab.git"
+    - "https://blob.istio.io/istio-release/charts"
     - "https://istio-release.storage.googleapis.com/charts"
     - "https://kubernetes-sigs.github.io/metrics-server/"
     - "https://kiali.org/helm-charts"
