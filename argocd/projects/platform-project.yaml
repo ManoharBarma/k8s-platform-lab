@@ -15,6 +15,8 @@ spec:
     - "https://istio-release.storage.googleapis.com/charts"
     - "https://kubernetes-sigs.github.io/metrics-server/"
     - "https://kiali.org/helm-charts"
+    - "https://prometheus-community.github.io/helm-charts"
+    - "https://grafana.github.io/helm-charts"
 
   # Scoped destination namespaces
   destinations:
@@ -27,6 +29,8 @@ spec:
     - namespace: kube-system
       server: https://kubernetes.default.svc
     - namespace: kiali
+      server: https://kubernetes.default.svc
+    - namespace: monitoring
       server: https://kubernetes.default.svc
 
   # Strictly scoped cluster-level resources required by CRDs
