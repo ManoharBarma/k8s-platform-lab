@@ -50,3 +50,7 @@ spec:
       kind: "*"
     - group: "rbac.authorization.k8s.io"
       kind: "*"
+    - group: "autoscaling"
+      kind: "*"
+    - group: "policy"
+      kind: "*"
