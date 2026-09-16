@@ -52,14 +52,14 @@ spec:
                 action: keep
                 regex: '.*-envoy-prom'
           retention: 1d
-          baseURL: /prometheus/
+          baseURL: /prometheus
           ingress:
             enabled: true
             ingressClassName: nginx
             annotations:
               nginx.ingress.kubernetes.io/ssl-redirect: "false"
             hosts: []
-            path: /prometheus/
+            path: /prometheus
             pathType: Prefix
           persistentVolume:
             enabled: false
