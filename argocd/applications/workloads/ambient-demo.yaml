@@ -10,11 +10,11 @@ metadata:
     app.kubernetes.io/name: ambient-demo
     app.kubernetes.io/part-of: k8s-platform-lab
 spec:
-  project: applications-project
+  project: workloads-project
   source:
     repoURL: https://github.com/ManoharBarma/k8s-platform-lab.git
     targetRevision: HEAD
-    path: apps/ambient-demo
+    path: workloads/ambient-demo
   destination:
     server: https://kubernetes.default.svc
     namespace: ambient-demo

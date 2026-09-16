@@ -1,13 +1,13 @@
 apiVersion: argoproj.io/v1alpha1
 kind: AppProject
 metadata:
-  name: applications-project
+  name: workloads-project
   namespace: argocd
   labels:
-    app.kubernetes.io/name: applications-project
+    app.kubernetes.io/name: workloads-project
     app.kubernetes.io/part-of: k8s-platform-lab
 spec:
-  description: "Argo CD Project for user application workloads (ambient-demo)"
+  description: "Argo CD Project for workload applications (e.g. ambient-demo)"
   
   # Only allow application manifests from this lab repository
   sourceRepos:

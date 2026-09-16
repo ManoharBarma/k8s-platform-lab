@@ -13,7 +13,7 @@ spec:
   source:
     repoURL: https://github.com/ManoharBarma/k8s-platform-lab.git
     targetRevision: HEAD
-    path: istio
+    path: platform/istio
     directory:
       recurse: true
   destination:
