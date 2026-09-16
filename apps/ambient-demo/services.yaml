@@ -1,0 +1,37 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend-service
+  namespace: ambient-demo
+  labels:
+    app: frontend
+    app.kubernetes.io/name: frontend-service
+    app.kubernetes.io/part-of: ambient-demo
+spec:
+  type: ClusterIP
+  ports:
+    - name: http
+      port: 80
+      targetPort: 80
+      protocol: TCP
+  selector:
+    app: frontend
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend-service
+  namespace: ambient-demo
+  labels:
+    app: backend
+    app.kubernetes.io/name: backend-service
+    app.kubernetes.io/part-of: ambient-demo
+spec:
+  type: ClusterIP
+  ports:
+    - name: http
+      port: 80
+      targetPort: 80
+      protocol: TCP
+  selector:
+    app: backend

@@ -1,0 +1,39 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: applications-project
+  namespace: argocd
+  labels:
+    app.kubernetes.io/name: applications-project
+    app.kubernetes.io/part-of: k8s-platform-lab
+spec:
+  description: "Argo CD Project for user application workloads (ambient-demo)"
+  
+  # Only allow application manifests from this lab repository
+  sourceRepos:
+    - "https://github.com/ManoharBarma/k8s-platform-lab.git"
+
+  # Strictly limited to ambient-demo namespace
+  destinations:
+    - namespace: ambient-demo
+      server: https://kubernetes.default.svc
+
+  # Allow creating namespaces for applications
+  clusterResourceWhitelist:
+    - group: ""
+      kind: Namespace
+
+  # Scoped namespace resource permissions
+  namespaceResourceWhitelist:
+    - group: ""
+      kind: ConfigMap
+    - group: ""
+      kind: Secret
+    - group: ""
+      kind: Service
+    - group: ""
+      kind: ServiceAccount
+    - group: "apps"
+      kind: Deployment
+    - group: "networking.k8s.io"
+      kind: Ingress

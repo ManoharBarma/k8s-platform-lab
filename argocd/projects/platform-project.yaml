@@ -1,0 +1,64 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: platform-project
+  namespace: argocd
+  labels:
+    app.kubernetes.io/name: platform-project
+    app.kubernetes.io/part-of: k8s-platform-lab
+spec:
+  description: "Argo CD Project for cluster platform components (Istio config, observability, Kiali)"
+  
+  # Repositories permitted for this project
+  sourceRepos:
+    - "https://github.com/ManoharBarma/k8s-platform-lab.git"
+    - "https://github.com/kubernetes-sigs/gateway-api.git"
+    - "https://prometheus-community.github.io/helm-charts"
+    - "https://kiali.org/helm-charts"
+
+  # Scoped destination namespaces
+  destinations:
+    - namespace: istio-system
+      server: https://kubernetes.default.svc
+    - namespace: ambient-demo
+      server: https://kubernetes.default.svc
+    - namespace: monitoring
+      server: https://kubernetes.default.svc
+    - namespace: kiali
+      server: https://kubernetes.default.svc
+
+  # Strictly scoped cluster-level resources required by monitoring, gateway API, and CRDs
+  clusterResourceWhitelist:
+    - group: ""
+      kind: Namespace
+    - group: "gateway.networking.k8s.io"
+      kind: GatewayClass
+    - group: "apiextensions.k8s.io"
+      kind: CustomResourceDefinition
+    - group: "rbac.authorization.k8s.io"
+      kind: ClusterRole
+    - group: "rbac.authorization.k8s.io"
+      kind: ClusterRoleBinding
+    - group: "admissionregistration.k8s.io"
+      kind: ValidatingWebhookConfiguration
+    - group: "admissionregistration.k8s.io"
+      kind: MutatingWebhookConfiguration
+
+  # Namespaced resources permitted across the target namespaces
+  namespaceResourceWhitelist:
+    - group: ""
+      kind: "*"
+    - group: "apps"
+      kind: "*"
+    - group: "networking.k8s.io"
+      kind: "*"
+    - group: "networking.istio.io"
+      kind: "*"
+    - group: "security.istio.io"
+      kind: "*"
+    - group: "gateway.networking.k8s.io"
+      kind: "*"
+    - group: "monitoring.coreos.com"
+      kind: "*"
+    - group: "rbac.authorization.k8s.io"
+      kind: "*"
