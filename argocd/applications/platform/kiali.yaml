@@ -24,6 +24,10 @@ spec:
         external_services:
           prometheus:
             url: http://prometheus-server.monitoring.svc:80
+          grafana:
+            enabled: true
+            in_cluster_url: http://grafana.monitoring.svc:80
+            url: /grafana
         deployment:
           ingress:
             enabled: true
