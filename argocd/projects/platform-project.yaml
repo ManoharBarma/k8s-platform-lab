@@ -13,12 +13,15 @@ spec:
   sourceRepos:
     - "https://github.com/ManoharBarma/k8s-platform-lab.git"
     - "https://istio-release.storage.googleapis.com/charts"
+    - "https://kubernetes-sigs.github.io/metrics-server/"
 
   # Scoped destination namespaces
   destinations:
     - namespace: istio-system
       server: https://kubernetes.default.svc
     - namespace: ambient-demo
+      server: https://kubernetes.default.svc
+    - namespace: metrics-server
       server: https://kubernetes.default.svc
 
   # Strictly scoped cluster-level resources required by CRDs
@@ -35,6 +38,8 @@ spec:
       kind: ValidatingWebhookConfiguration
     - group: "admissionregistration.k8s.io"
       kind: MutatingWebhookConfiguration
+    - group: "apiregistration.k8s.io"
+      kind: APIService
 
   # Namespaced resources permitted across the target namespaces
   namespaceResourceWhitelist:
