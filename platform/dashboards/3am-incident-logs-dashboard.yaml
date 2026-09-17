@@ -1,0 +1,175 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: 3am-incident-logs-dashboard
+  namespace: monitoring
+  labels:
+    grafana_dashboard: "1"
+    app.kubernetes.io/name: grafana-dashboard
+    app.kubernetes.io/part-of: k8s-platform-lab
+data:
+  3am-incident-logs.json: |
+    {
+      "annotations": { "list": [] },
+      "editable": true,
+      "fiscalYearStartMonth": 0,
+      "graphTooltip": 1,
+      "links": [],
+      "panels": [
+        {
+          "collapsed": false,
+          "gridPos": { "h": 1, "w": 24, "x": 0, "y": 0 },
+          "id": 100,
+          "title": "🚨 3 AM Triage & Error Highlights",
+          "type": "row"
+        },
+        {
+          "datasource": "Loki",
+          "fieldConfig": {
+            "defaults": {
+              "color": { "mode": "thresholds" },
+              "thresholds": { "steps": [{ "color": "green", "value": null }, { "color": "orange", "value": 1 }, { "color": "red", "value": 10 }] },
+              "unit": "short"
+            }
+          },
+          "gridPos": { "h": 4, "w": 8, "x": 0, "y": 1 },
+          "id": 1,
+          "options": { "colorMode": "value", "graphMode": "area", "reduceOptions": { "calcs": ["sum"] } },
+          "title": "Total Error Logs (Last 1h)",
+          "type": "stat",
+          "targets": [{
+            "expr": "sum(count_over_time({namespace=~\"$namespace\"} |~ \"(?i)(error|exception|fatal|500|503)\" [$__range]))",
+            "legendFormat": "Errors"
+          }]
+        },
+        {
+          "datasource": "Prometheus",
+          "fieldConfig": {
+            "defaults": {
+              "color": { "mode": "thresholds" },
+              "thresholds": { "steps": [{ "color": "green", "value": null }, { "color": "red", "value": 1 }] },
+              "unit": "short"
+            }
+          },
+          "gridPos": { "h": 4, "w": 8, "x": 8, "y": 1 },
+          "id": 2,
+          "options": { "colorMode": "value", "graphMode": "area", "reduceOptions": { "calcs": ["lastNotNull"] } },
+          "title": "Pod Restarts (Last 1h)",
+          "type": "stat",
+          "targets": [{
+            "expr": "sum(changes(kube_pod_container_status_restarts_total[1h]))",
+            "legendFormat": "Restarts"
+          }]
+        },
+        {
+          "datasource": "Loki",
+          "fieldConfig": {
+            "defaults": {
+              "color": { "mode": "thresholds" },
+              "thresholds": { "steps": [{ "color": "green", "value": null }, { "color": "red", "value": 1 }] },
+              "unit": "short"
+            }
+          },
+          "gridPos": { "h": 4, "w": 8, "x": 16, "y": 1 },
+          "id": 3,
+          "options": { "colorMode": "value", "graphMode": "area", "reduceOptions": { "calcs": ["sum"] } },
+          "title": "5xx HTTP Error Logs",
+          "type": "stat",
+          "targets": [{
+            "expr": "sum(count_over_time({namespace=~\"$namespace\"} |= \" 500 \" or \" 503 \" [$__range]))",
+            "legendFormat": "5xx Logs"
+          }]
+        },
+        {
+          "collapsed": false,
+          "gridPos": { "h": 1, "w": 24, "x": 0, "y": 5 },
+          "id": 101,
+          "title": "📊 Log Volume & Error Rates",
+          "type": "row"
+        },
+        {
+          "datasource": "Loki",
+          "fieldConfig": {
+            "defaults": { "unit": "logs/s", "color": { "mode": "palette-classic" } },
+            "overrides": []
+          },
+          "gridPos": { "h": 8, "w": 12, "x": 0, "y": 6 },
+          "id": 4,
+          "options": { "legend": { "displayMode": "table", "placement": "bottom", "calcs": ["mean", "max"] } },
+          "title": "Error Log Rate by App",
+          "type": "timeseries",
+          "targets": [{
+            "expr": "sum(rate({namespace=~\"$namespace\"} |~ \"(?i)(error|exception|fatal|500|503)\" [1m])) by (app)",
+            "legendFormat": "{{app}}"
+          }]
+        },
+        {
+          "datasource": "Loki",
+          "fieldConfig": {
+            "defaults": { "unit": "logs/s", "color": { "mode": "palette-classic" } },
+            "overrides": []
+          },
+          "gridPos": { "h": 8, "w": 12, "x": 12, "y": 6 },
+          "id": 5,
+          "options": { "legend": { "displayMode": "table", "placement": "bottom", "calcs": ["mean", "max"] } },
+          "title": "Overall Log Volume by Pod",
+          "type": "timeseries",
+          "targets": [{
+            "expr": "sum(rate({namespace=~\"$namespace\"} [1m])) by (pod)",
+            "legendFormat": "{{pod}}"
+          }]
+        },
+        {
+          "collapsed": false,
+          "gridPos": { "h": 1, "w": 24, "x": 0, "y": 14 },
+          "id": 102,
+          "title": "📜 Live Loki Log Explorer",
+          "type": "row"
+        },
+        {
+          "datasource": "Loki",
+          "gridPos": { "h": 12, "w": 24, "x": 0, "y": 15 },
+          "id": 6,
+          "options": {
+            "enableLogDetails": true,
+            "showLabels": true,
+            "showCommonLabels": true,
+            "wrapLogMessage": true,
+            "prettifyLogMessage": true
+          },
+          "title": "Interactive Log Viewer",
+          "type": "logs",
+          "targets": [{
+            "expr": "{namespace=~\"$namespace\"} |~ \"$search\"",
+            "legendFormat": ""
+          }]
+        }
+      ],
+      "schemaVersion": 39,
+      "tags": ["3am", "incident", "loki", "logs"],
+      "templating": {
+        "list": [
+          {
+            "current": { "selected": true, "text": "All", "value": ".*" },
+            "name": "namespace",
+            "query": ".*",
+            "type": "custom",
+            "options": [
+              { "selected": true, "text": "All Namespaces", "value": ".*" },
+              { "selected": false, "text": "ambient-demo", "value": "ambient-demo" },
+              { "selected": false, "text": "istio-system", "value": "istio-system" },
+              { "selected": false, "text": "monitoring", "value": "monitoring" }
+            ]
+          },
+          {
+            "current": { "selected": false, "text": "", "value": "" },
+            "name": "search",
+            "type": "textbox",
+            "label": "Log Search Filter (regex)"
+          }
+        ]
+      },
+      "time": { "from": "now-1h", "to": "now" },
+      "title": "🚨 3 AM Incident & Log Investigator",
+      "uid": "3am-incident-logs"
+    }
