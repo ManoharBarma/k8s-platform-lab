@@ -1,3 +1,6 @@
+nameOverride: loki
+fullnameOverride: loki
+
 loki:
   enabled: true
   persistence:
