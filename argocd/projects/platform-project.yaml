@@ -18,6 +18,7 @@ spec:
     - "https://kiali.org/helm-charts"
     - "https://prometheus-community.github.io/helm-charts"
     - "https://grafana.github.io/helm-charts"
+    - "https://github.com/kubernetes-sigs/gateway-api.git"
 
   # Scoped destination namespaces
   destinations:
@@ -68,4 +69,6 @@ spec:
     - group: "autoscaling"
       kind: "*"
     - group: "policy"
+      kind: "*"
+    - group: "gateway.networking.k8s.io"
       kind: "*"
