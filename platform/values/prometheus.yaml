@@ -34,12 +34,14 @@ server:
         regex: '.*-envoy-prom'
   retention: 1d
   baseURL: /prometheus
+  prefixURL: /prometheus
   ingress:
     enabled: true
     ingressClassName: nginx
     annotations:
       nginx.ingress.kubernetes.io/ssl-redirect: "false"
-    hosts: []
+    hosts:
+      - ""
     path: /prometheus
     pathType: Prefix
   persistentVolume:
@@ -51,3 +53,4 @@ server:
     limits:
       cpu: 500m
       memory: 512Mi
+
