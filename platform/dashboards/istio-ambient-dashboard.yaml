@@ -1,0 +1,245 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: istio-ambient-dashboard
+  namespace: monitoring
+  labels:
+    grafana_dashboard: "1"
+    app.kubernetes.io/name: grafana-dashboard
+    app.kubernetes.io/part-of: k8s-platform-lab
+data:
+  istio-ambient-mesh.json: |
+    {
+      "annotations": { "list": [] },
+      "editable": true,
+      "fiscalYearStartMonth": 0,
+      "graphTooltip": 1,
+      "links": [],
+      "panels": [
+        {
+          "collapsed": false,
+          "gridPos": { "h": 1, "w": 24, "x": 0, "y": 0 },
+          "id": 100,
+          "title": "🌐 Mesh Overview",
+          "type": "row"
+        },
+        {
+          "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+          "fieldConfig": {
+            "defaults": {
+              "color": { "mode": "thresholds" },
+              "thresholds": { "steps": [{ "color": "green", "value": null }] },
+              "unit": "reqps"
+            }
+          },
+          "gridPos": { "h": 4, "w": 6, "x": 0, "y": 1 },
+          "id": 1,
+          "options": { "colorMode": "value", "graphMode": "area", "reduceOptions": { "calcs": ["lastNotNull"] } },
+          "title": "Global Request Rate",
+          "type": "stat",
+          "targets": [{
+            "expr": "round(sum(irate(istio_requests_total{reporter=~\"source|destination|waypoint\"}[5m])), 0.001)",
+            "legendFormat": "Requests/s"
+          }]
+        },
+        {
+          "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+          "fieldConfig": {
+            "defaults": {
+              "color": { "mode": "thresholds" },
+              "thresholds": { "steps": [{ "color": "red", "value": null }, { "color": "orange", "value": 95 }, { "color": "green", "value": 99 }] },
+              "unit": "percentunit", "max": 1
+            }
+          },
+          "gridPos": { "h": 4, "w": 6, "x": 6, "y": 1 },
+          "id": 2,
+          "options": { "colorMode": "value", "graphMode": "area", "reduceOptions": { "calcs": ["lastNotNull"] } },
+          "title": "Global Success Rate",
+          "type": "stat",
+          "targets": [{
+            "expr": "sum(irate(istio_requests_total{reporter=~\"source|destination|waypoint\", response_code!~\"5.*\"}[5m])) / sum(irate(istio_requests_total{reporter=~\"source|destination|waypoint\"}[5m]))",
+            "legendFormat": "Success Rate"
+          }]
+        },
+        {
+          "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+          "fieldConfig": {
+            "defaults": {
+              "color": { "mode": "thresholds" },
+              "thresholds": { "steps": [{ "color": "green", "value": null }, { "color": "orange", "value": 1 }, { "color": "red", "value": 5 }] },
+              "unit": "reqps"
+            }
+          },
+          "gridPos": { "h": 4, "w": 6, "x": 12, "y": 1 },
+          "id": 3,
+          "options": { "colorMode": "value", "graphMode": "area", "reduceOptions": { "calcs": ["lastNotNull"] } },
+          "title": "4xx Rate",
+          "type": "stat",
+          "targets": [{
+            "expr": "round(sum(irate(istio_requests_total{reporter=~\"source|destination|waypoint\", response_code=~\"4.*\"}[5m])), 0.001)",
+            "legendFormat": "4xx/s"
+          }]
+        },
+        {
+          "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+          "fieldConfig": {
+            "defaults": {
+              "color": { "mode": "thresholds" },
+              "thresholds": { "steps": [{ "color": "green", "value": null }, { "color": "red", "value": 0.01 }] },
+              "unit": "reqps"
+            }
+          },
+          "gridPos": { "h": 4, "w": 6, "x": 18, "y": 1 },
+          "id": 4,
+          "options": { "colorMode": "value", "graphMode": "area", "reduceOptions": { "calcs": ["lastNotNull"] } },
+          "title": "5xx Rate",
+          "type": "stat",
+          "targets": [{
+            "expr": "round(sum(irate(istio_requests_total{reporter=~\"source|destination|waypoint\", response_code=~\"5.*\"}[5m])), 0.001)",
+            "legendFormat": "5xx/s"
+          }]
+        },
+        {
+          "collapsed": false,
+          "gridPos": { "h": 1, "w": 24, "x": 0, "y": 5 },
+          "id": 101,
+          "title": "📊 HTTP Traffic by Workload",
+          "type": "row"
+        },
+        {
+          "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+          "fieldConfig": {
+            "defaults": { "unit": "reqps", "color": { "mode": "palette-classic" } },
+            "overrides": []
+          },
+          "gridPos": { "h": 8, "w": 12, "x": 0, "y": 6 },
+          "id": 5,
+          "options": { "legend": { "displayMode": "table", "placement": "bottom", "calcs": ["mean", "max"] }, "tooltip": { "mode": "multi" } },
+          "title": "Request Rate by Destination Workload",
+          "type": "timeseries",
+          "targets": [{
+            "expr": "round(sum(irate(istio_requests_total{reporter=~\"source|destination|waypoint\"}[5m])) by (destination_workload, destination_workload_namespace, response_code), 0.001)",
+            "legendFormat": "{{destination_workload}}.{{destination_workload_namespace}} [{{response_code}}]"
+          }]
+        },
+        {
+          "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+          "fieldConfig": {
+            "defaults": { "unit": "reqps", "color": { "mode": "palette-classic" } },
+            "overrides": []
+          },
+          "gridPos": { "h": 8, "w": 12, "x": 12, "y": 6 },
+          "id": 6,
+          "options": { "legend": { "displayMode": "table", "placement": "bottom", "calcs": ["mean", "max"] }, "tooltip": { "mode": "multi" } },
+          "title": "Error Rate by Workload (4xx + 5xx)",
+          "type": "timeseries",
+          "targets": [{
+            "expr": "round(sum(irate(istio_requests_total{reporter=~\"source|destination|waypoint\", response_code=~\"[45].*\"}[5m])) by (destination_workload, response_code), 0.001)",
+            "legendFormat": "{{destination_workload}} [{{response_code}}]"
+          }]
+        },
+        {
+          "collapsed": false,
+          "gridPos": { "h": 1, "w": 24, "x": 0, "y": 14 },
+          "id": 102,
+          "title": "⏱️ Latency",
+          "type": "row"
+        },
+        {
+          "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+          "fieldConfig": {
+            "defaults": { "unit": "ms", "color": { "mode": "palette-classic" } },
+            "overrides": []
+          },
+          "gridPos": { "h": 8, "w": 12, "x": 0, "y": 15 },
+          "id": 7,
+          "options": { "legend": { "displayMode": "table", "placement": "bottom", "calcs": ["mean", "max"] }, "tooltip": { "mode": "multi" } },
+          "title": "Request Duration P50 / P90 / P99",
+          "type": "timeseries",
+          "targets": [
+            {
+              "expr": "histogram_quantile(0.50, sum(irate(istio_request_duration_milliseconds_bucket{reporter=~\"source|destination|waypoint\"}[5m])) by (le, destination_workload))",
+              "legendFormat": "{{destination_workload}} P50"
+            },
+            {
+              "expr": "histogram_quantile(0.90, sum(irate(istio_request_duration_milliseconds_bucket{reporter=~\"source|destination|waypoint\"}[5m])) by (le, destination_workload))",
+              "legendFormat": "{{destination_workload}} P90"
+            },
+            {
+              "expr": "histogram_quantile(0.99, sum(irate(istio_request_duration_milliseconds_bucket{reporter=~\"source|destination|waypoint\"}[5m])) by (le, destination_workload))",
+              "legendFormat": "{{destination_workload}} P99"
+            }
+          ]
+        },
+        {
+          "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+          "fieldConfig": {
+            "defaults": { "unit": "reqps", "color": { "mode": "palette-classic" } },
+            "overrides": []
+          },
+          "gridPos": { "h": 8, "w": 12, "x": 12, "y": 15 },
+          "id": 8,
+          "options": { "legend": { "displayMode": "table", "placement": "bottom", "calcs": ["mean", "max"] }, "tooltip": { "mode": "multi" } },
+          "title": "Request Rate by Source → Destination",
+          "type": "timeseries",
+          "targets": [{
+            "expr": "round(sum(irate(istio_requests_total{reporter=~\"source|destination|waypoint\"}[5m])) by (source_workload, destination_workload), 0.001)",
+            "legendFormat": "{{source_workload}} → {{destination_workload}}"
+          }]
+        },
+        {
+          "collapsed": false,
+          "gridPos": { "h": 1, "w": 24, "x": 0, "y": 23 },
+          "id": 103,
+          "title": "🔌 TCP Traffic",
+          "type": "row"
+        },
+        {
+          "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+          "fieldConfig": {
+            "defaults": { "unit": "Bps", "color": { "mode": "palette-classic" } },
+            "overrides": []
+          },
+          "gridPos": { "h": 8, "w": 12, "x": 0, "y": 24 },
+          "id": 9,
+          "options": { "legend": { "displayMode": "table", "placement": "bottom", "calcs": ["mean", "max"] }, "tooltip": { "mode": "multi" } },
+          "title": "TCP Bytes Received",
+          "type": "timeseries",
+          "targets": [{
+            "expr": "round(sum(irate(istio_tcp_received_bytes_total{destination_service_namespace=\"ambient-demo\"}[5m])) by (destination_workload), 0.001)",
+            "legendFormat": "{{destination_workload}}"
+          }]
+        },
+        {
+          "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+          "fieldConfig": {
+            "defaults": { "unit": "short", "color": { "mode": "palette-classic" } },
+            "overrides": []
+          },
+          "gridPos": { "h": 8, "w": 12, "x": 12, "y": 24 },
+          "id": 10,
+          "options": { "legend": { "displayMode": "table", "placement": "bottom", "calcs": ["mean", "max"] }, "tooltip": { "mode": "multi" } },
+          "title": "TCP Connections Opened",
+          "type": "timeseries",
+          "targets": [{
+            "expr": "round(sum(irate(istio_tcp_connections_opened_total{destination_service_namespace=\"ambient-demo\"}[5m])) by (destination_workload, source_workload), 0.001)",
+            "legendFormat": "{{source_workload}} → {{destination_workload}}"
+          }]
+        }
+      ],
+      "schemaVersion": 39,
+      "tags": ["istio", "ambient"],
+      "templating": {
+        "list": [{
+          "current": { "selected": false, "text": "Prometheus", "value": "Prometheus" },
+          "hide": 0,
+          "includeAll": false,
+          "name": "DS_PROMETHEUS",
+          "query": "prometheus",
+          "type": "datasource"
+        }]
+      },
+      "time": { "from": "now-15m", "to": "now" },
+      "title": "Istio Ambient Mesh",
+      "uid": "istio-ambient-mesh"
+    }
