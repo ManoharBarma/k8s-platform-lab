@@ -25,6 +25,11 @@ datasources:
         url: http://prometheus-server.monitoring.svc.cluster.local/prometheus
         access: proxy
         isDefault: true
+      - name: Loki
+        type: loki
+        url: http://loki.monitoring.svc.cluster.local:3100
+        access: proxy
+        isDefault: false
 
 # Enable sidecar to load dashboards from ConfigMaps
 sidecar:

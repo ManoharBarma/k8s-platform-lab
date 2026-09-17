@@ -1,0 +1,33 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: loki-stack
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
+  labels:
+    app.kubernetes.io/name: loki-stack
+    app.kubernetes.io/part-of: k8s-platform-lab
+spec:
+  project: platform-project
+  sources:
+    - repoURL: https://grafana.github.io/helm-charts
+      targetRevision: 2.10.2
+      chart: loki-stack
+      helm:
+        releaseName: loki
+        valueFiles:
+          - $values/platform/values/loki-stack.yaml
+    - repoURL: https://github.com/ManoharBarma/k8s-platform-lab.git
+      targetRevision: HEAD
+      ref: values
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: monitoring
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true

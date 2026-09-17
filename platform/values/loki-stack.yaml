@@ -1,0 +1,17 @@
+loki:
+  enabled: true
+  persistence:
+    enabled: false
+  config:
+    auth_enabled: false
+
+promtail:
+  enabled: true
+  config:
+    logLevel: info
+    serverPort: 3101
+    clients:
+      - url: http://loki.monitoring.svc.cluster.local:3100/loki/api/v1/push
+
+grafana:
+  enabled: false
