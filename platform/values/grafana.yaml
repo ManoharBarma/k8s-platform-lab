@@ -22,7 +22,7 @@ datasources:
     datasources:
       - name: Prometheus
         type: prometheus
-        url: http://prometheus-server.monitoring.svc.cluster.local
+        url: http://prometheus-server.monitoring.svc.cluster.local/prometheus
         access: proxy
         isDefault: true
 
