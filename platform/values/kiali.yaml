@@ -1,0 +1,19 @@
+auth:
+  strategy: anonymous
+server:
+  web_root: /kiali
+external_services:
+  prometheus:
+    url: http://prometheus-server.monitoring.svc:80
+  grafana:
+    enabled: true
+    in_cluster_url: http://grafana.monitoring.svc:80
+    url: /grafana
+deployment:
+  ingress:
+    enabled: true
+    class_name: nginx
+    override_yaml:
+      metadata:
+        annotations:
+          nginx.ingress.kubernetes.io/ssl-redirect: "false"

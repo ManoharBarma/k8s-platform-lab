@@ -8,16 +8,17 @@ metadata:
     app.kubernetes.io/part-of: k8s-platform-lab
 spec:
   project: platform-project
-  source:
-    repoURL: https://kubernetes-sigs.github.io/metrics-server/
-    chart: metrics-server
-    targetRevision: 3.13.0
-    helm:
-      releaseName: metrics-server
-      values: |
-        args:
-          - --kubelet-insecure-tls
-          - --kubelet-preferred-address-types=InternalIP,Hostname
+  sources:
+    - repoURL: https://kubernetes-sigs.github.io/metrics-server/
+      chart: metrics-server
+      targetRevision: 3.13.0
+      helm:
+        releaseName: metrics-server
+        valueFiles:
+          - $values/platform/values/metrics-server.yaml
+    - repoURL: https://github.com/ManoharBarma/k8s-platform-lab.git
+      targetRevision: HEAD
+      ref: values
   destination:
     server: https://kubernetes.default.svc
     namespace: metrics-server

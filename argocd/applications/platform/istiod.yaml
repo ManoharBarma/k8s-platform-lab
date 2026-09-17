@@ -10,14 +10,17 @@ metadata:
     app.kubernetes.io/part-of: k8s-platform-lab
 spec:
   project: platform-project
-  source:
-    repoURL: https://blob.istio.io/istio-release/charts
-    targetRevision: 1.31.0
-    chart: istiod
-    helm:
-      releaseName: istiod
-      valuesObject:
-        profile: ambient
+  sources:
+    - repoURL: https://blob.istio.io/istio-release/charts
+      targetRevision: 1.31.0
+      chart: istiod
+      helm:
+        releaseName: istiod
+        valueFiles:
+          - $values/platform/values/istiod.yaml
+    - repoURL: https://github.com/ManoharBarma/k8s-platform-lab.git
+      targetRevision: HEAD
+      ref: values
   destination:
     server: https://kubernetes.default.svc
     namespace: istio-system

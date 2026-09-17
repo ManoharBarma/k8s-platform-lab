@@ -1,0 +1,5 @@
+profile: ambient
+cni:
+  ambient:
+    enabled: true
+    dnsCapture: true

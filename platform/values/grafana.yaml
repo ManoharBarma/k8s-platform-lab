@@ -1,0 +1,55 @@
+adminPassword: admin
+persistence:
+  enabled: false
+grafana.ini:
+  server:
+    root_url: /grafana/
+    serve_from_sub_path: true
+  auth.anonymous:
+    enabled: true
+    org_role: Admin
+ingress:
+  enabled: true
+  ingressClassName: nginx
+  path: /grafana
+  pathType: Prefix
+  hosts: []
+  annotations:
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+datasources:
+  datasources.yaml:
+    apiVersion: 1
+    datasources:
+      - name: Prometheus
+        type: prometheus
+        url: http://prometheus-server.monitoring.svc.cluster.local
+        access: proxy
+        isDefault: true
+
+dashboardProviders:
+  dashboardproviders.yaml:
+    apiVersion: 1
+    providers:
+    - name: 'istio'
+      orgId: 1
+      folder: 'Istio'
+      type: file
+      disableDeletion: false
+      editable: true
+      options:
+        path: /var/lib/grafana/dashboards/istio
+
+dashboards:
+  istio:
+    istio-mesh:
+      gnetId: 7639
+      datasource: Prometheus
+    istio-service:
+      gnetId: 7636
+      datasource: Prometheus
+    istio-workload:
+      gnetId: 7630
+      datasource: Prometheus
+    istio-control-plane:
+      gnetId: 7645
+      datasource: Prometheus

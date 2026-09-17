@@ -10,32 +10,17 @@ metadata:
     app.kubernetes.io/part-of: k8s-platform-lab
 spec:
   project: platform-project
-  source:
-    repoURL: https://kiali.org/helm-charts
-    chart: kiali-server
-    targetRevision: 1.89.0
-    helm:
-      releaseName: kiali-server
-      values: |
-        auth:
-          strategy: anonymous
-        server:
-          web_root: /kiali
-        external_services:
-          prometheus:
-            url: http://prometheus-server.monitoring.svc:80
-          grafana:
-            enabled: true
-            in_cluster_url: http://grafana.monitoring.svc:80
-            url: /grafana
-        deployment:
-          ingress:
-            enabled: true
-            class_name: nginx
-            override_yaml:
-              metadata:
-                annotations:
-                  nginx.ingress.kubernetes.io/ssl-redirect: "false"
+  sources:
+    - repoURL: https://kiali.org/helm-charts
+      chart: kiali-server
+      targetRevision: 1.89.0
+      helm:
+        releaseName: kiali-server
+        valueFiles:
+          - $values/platform/values/kiali.yaml
+    - repoURL: https://github.com/ManoharBarma/k8s-platform-lab.git
+      targetRevision: HEAD
+      ref: values
   destination:
     server: https://kubernetes.default.svc
     namespace: kiali

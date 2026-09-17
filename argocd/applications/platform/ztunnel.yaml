@@ -10,16 +10,17 @@ metadata:
     app.kubernetes.io/part-of: k8s-platform-lab
 spec:
   project: platform-project
-  source:
-    repoURL: https://blob.istio.io/istio-release/charts
-    targetRevision: 1.31.0
-    chart: ztunnel
-    helm:
-      releaseName: ztunnel
-      valuesObject:
-        profile: ambient
-        env:
-          L7_MODE: "false"
+  sources:
+    - repoURL: https://blob.istio.io/istio-release/charts
+      targetRevision: 1.31.0
+      chart: ztunnel
+      helm:
+        releaseName: ztunnel
+        valueFiles:
+          - $values/platform/values/ztunnel.yaml
+    - repoURL: https://github.com/ManoharBarma/k8s-platform-lab.git
+      targetRevision: HEAD
+      ref: values
   destination:
     server: https://kubernetes.default.svc
     namespace: istio-system

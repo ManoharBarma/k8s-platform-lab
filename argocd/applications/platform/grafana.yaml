@@ -10,40 +10,17 @@ metadata:
     app.kubernetes.io/part-of: k8s-platform-lab
 spec:
   project: platform-project
-  source:
-    repoURL: https://grafana.github.io/helm-charts
-    chart: grafana
-    targetRevision: 8.5.0
-    helm:
-      releaseName: grafana
-      values: |
-        adminPassword: admin
-        persistence:
-          enabled: false
-        grafana.ini:
-          server:
-            root_url: /grafana/
-            serve_from_sub_path: true
-          auth.anonymous:
-            enabled: true
-            org_role: Admin
-        ingress:
-          enabled: true
-          ingressClassName: nginx
-          path: /grafana
-          pathType: Prefix
-          hosts: []
-          annotations:
-            nginx.ingress.kubernetes.io/ssl-redirect: "false"
-        datasources:
-          datasources.yaml:
-            apiVersion: 1
-            datasources:
-              - name: Prometheus
-                type: prometheus
-                url: http://prometheus-server.monitoring.svc.cluster.local
-                access: proxy
-                isDefault: true
+  sources:
+    - repoURL: https://grafana.github.io/helm-charts
+      chart: grafana
+      targetRevision: 8.5.0
+      helm:
+        releaseName: grafana
+        valueFiles:
+          - $values/platform/values/grafana.yaml
+    - repoURL: https://github.com/ManoharBarma/k8s-platform-lab.git
+      targetRevision: HEAD
+      ref: values
   destination:
     server: https://kubernetes.default.svc
     namespace: monitoring
