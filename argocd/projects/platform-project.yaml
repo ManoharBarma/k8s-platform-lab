@@ -22,6 +22,8 @@ spec:
 
   # Scoped destination namespaces
   destinations:
+    - namespace: default
+      server: https://kubernetes.default.svc
     - namespace: istio-system
       server: https://kubernetes.default.svc
     - namespace: ambient-demo

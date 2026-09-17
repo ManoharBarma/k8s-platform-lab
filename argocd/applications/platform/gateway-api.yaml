@@ -18,6 +18,7 @@ spec:
       recurse: true
   destination:
     server: https://kubernetes.default.svc
+    namespace: default
   syncPolicy:
     automated:
       prune: false
@@ -26,3 +27,4 @@ spec:
       - CreateNamespace=false
       - ServerSideApply=true
       - Replace=true
+      - SkipDryRunOnMissingResource=true
