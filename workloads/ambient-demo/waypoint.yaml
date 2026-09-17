@@ -1,0 +1,15 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  name: waypoint
+  namespace: ambient-demo
+  labels:
+    istio.io/waypoint-for: service
+    app.kubernetes.io/name: waypoint
+    app.kubernetes.io/part-of: ambient-demo
+spec:
+  gatewayClassName: istio-waypoint
+  listeners:
+    - name: mesh
+      port: 15008
+      protocol: HBONE

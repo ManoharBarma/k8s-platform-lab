@@ -5,5 +5,8 @@ metadata:
   labels:
     # Enrolls all pods in this namespace into the Istio Ambient mesh data plane
     istio.io/dataplane-mode: ambient
+    # Routes traffic through the waypoint proxy for L7 (HTTP) metrics
+    istio.io/use-waypoint: waypoint
     app.kubernetes.io/name: ambient-demo
     app.kubernetes.io/part-of: k8s-platform-lab
+
