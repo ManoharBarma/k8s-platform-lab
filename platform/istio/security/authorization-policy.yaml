@@ -1,15 +1,12 @@
 apiVersion: security.istio.io/v1
 kind: AuthorizationPolicy
 metadata:
-  name: backend-authz
-  namespace: ambient-demo
+  name: bookinfo-authz
+  namespace: bookinfo
   labels:
-    app.kubernetes.io/name: backend-authz
-    app.kubernetes.io/part-of: ambient-demo
+    app.kubernetes.io/name: bookinfo-authz
+    app.kubernetes.io/part-of: bookinfo
 spec:
-  selector:
-    matchLabels:
-      app: backend
   action: ALLOW
   rules:
     - to:

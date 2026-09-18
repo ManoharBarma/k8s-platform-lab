@@ -1,8 +1,8 @@
 apiVersion: security.istio.io/v1beta1
 kind: PeerAuthentication
 metadata:
-  name: strict-mtls
-  namespace: ambient-demo
+  name: default
+  namespace: bookinfo
 spec:
   mtls:
     mode: PERMISSIVE

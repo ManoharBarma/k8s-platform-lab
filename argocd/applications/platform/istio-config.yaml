@@ -18,7 +18,7 @@ spec:
       recurse: true
   destination:
     server: https://kubernetes.default.svc
-    namespace: ambient-demo
+    namespace: bookinfo
   syncPolicy:
     automated:
       prune: true

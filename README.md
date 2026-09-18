@@ -1,6 +1,6 @@
 # Kubernetes GitOps Platform Lab
 
-Welcome to the Kubernetes GitOps Platform Lab. This repository is the source of truth for a complete, scalable, production-style GitOps architecture managed entirely by Argo CD. It provisions Istio Ambient mesh, observability (Prometheus, Grafana, Kiali), and a multi-tier sample application (`ambient-demo`).
+Welcome to the Kubernetes GitOps Platform Lab. This repository is the source of truth for a complete, scalable, production-style GitOps architecture managed entirely by Argo CD. It provisions Istio Ambient mesh, observability (Prometheus, Grafana, Kiali), and a multi-tier sample application (`bookinfo`).
 
 ---
 
@@ -24,11 +24,10 @@ Bootstrap Script
 |                                                             |
 |  [Istio Core]      [Observability]      [Sample Apps]       |
 |  (Helm Sources)    (Helm Sources)       (Plain YAML)        |
-|  - istio-base      - Prometheus         - frontend          |
-|  - istiod          - Grafana            - backend           |
-|  - istio-cni       - Kiali              - ingress           |
-|  - ztunnel                              - services          |
-|                                                             |
+|  - istiod          - Grafana            - productpage       |
+|  - istio-cni       - Kiali              - details           |
+|  - ztunnel                              - reviews           |
+|                                         - ratings           |
 |  [Istio Config] (Plain YAML)                                |
 |  - Ambient labels, Gateways, Waypoints                      |
 |  - PeerAuthentication, AuthorizationPolicy                  |
@@ -46,7 +45,7 @@ Bootstrap Script
 ### Centralized Helm Strategy
 This repository demonstrates a scalable consumption model for Kubernetes configuration:
 - **Platform/Third-Party Software (Istio, Prometheus, Kiali)**: Consumed directly through Argo CD **Helm references**. We *pin* the chart version and declare configuration overrides (values). We **DO NOT** commit huge, generated Helm manifests to Git, keeping the repository clean, reviewable, and easily upgradable.
-- **Application Configuration (ambient-demo, Istio traffic policies)**: Uses **plain Kubernetes YAML**. There is no need to create complex Helm charts for simple, proprietary internal applications unless massive multi-environment templating is strictly required.
+- **Application Configuration (bookinfo, Istio traffic policies)**: Uses **plain Kubernetes YAML**. There is no need to create complex Helm charts for simple, proprietary internal applications unless massive multi-environment templating is strictly required.
 
 ---
 
@@ -63,7 +62,7 @@ chmod +x bootstrap/bootstrap-argocd.sh
 The script will output your Argo CD URL (`http://<NodeIP>:30080/gitops`) and your initial admin credentials.
 Once Argo CD is running, you configure it to point to this repository. Argo CD will then read the `argocd/applications/` directory and begin the Sync Wave process:
 - **Wave 0**: Installs Istio Core via Helm (istio-base, istiod, istio-cni, ztunnel).
-- **Wave 1**: Deploys the `ambient-demo` namespaces and base workloads.
+- **Wave 1**: Deploys the `bookinfo` namespaces and base workloads.
 - **Wave 2**: Applies Istio routing and security configurations.
 - **Wave 3**: Deploys the observability stack (kube-prometheus-stack).
 - **Wave 4**: Deploys Kiali (Optional/Manual sync by default).
@@ -90,7 +89,7 @@ If L7 policies are applied, ztunnel securely routes traffic to the Waypoint prox
 
 ### Traffic & Security Policies
 - **Gateway**: Integrates Istio ingress/mesh entrypoints using the modern Kubernetes Gateway API (`gateway.networking.k8s.io`).
-- **Waypoint**: Gateway API configuration instructing Istio to deploy an L7 proxy for `ambient-demo`.
+- **Waypoint**: Gateway API configuration instructing Istio to deploy an L7 proxy for `bookinfo`.
 - **PeerAuthentication**: Enforces STRICT mutual TLS (mTLS) across the namespace, rejecting plaintext traffic.
 - **AuthorizationPolicy**: Demonstrates Zero-Trust access control, allowing only specific HTTP GET methods to the backend while denying others, leveraging Ambient's SPIFFE workload identities.
 - **VirtualService**: Demonstrates HTTP path matching (`/delay/`), custom header matching (`x-lab-user`), 3s timeouts, and automatic 5xx retries.
@@ -113,7 +112,7 @@ If L7 policies are applied, ztunnel securely routes traffic to the Waypoint prox
 kubectl get pods -A
 kubectl get svc -A
 kubectl get ingress -A
-kubectl -n ambient-demo get pods -o wide
+kubectl -n bookinfo get pods -o wide
 ```
 
 ### Istio Ambient Verification
@@ -126,25 +125,15 @@ istioctl ztunnel-config connections
 ### External Application Traffic
 *(Replace `<NODE_IP>` with your lab's node IP address)*
 ```bash
-curl -i http://<NODE_IP>:30080/app
-curl -i http://<NODE_IP>:30080/api/get
+curl -i http://<NODE_IP>:30080/productpage
 ```
 
 ### Ambient Mesh Internal Traffic (From inside the mesh)
-*First, deploy a temporary curl pod in the ambient-demo namespace if you do not have one, or exec into the frontend pod:*
+*First, deploy a temporary curl pod in the bookinfo namespace if you do not have one, or exec into the ratings pod:*
 ```bash
-# Test basic connectivity to backend
-kubectl -n ambient-demo exec deploy/frontend -- curl -s http://backend-service/get
+# Test basic connectivity to details service
+kubectl -n bookinfo exec deploy/ratings-v1 -- curl -s http://details:9080/details/0
 
-# Test Header Matching (VirtualService)
-kubectl -n ambient-demo exec deploy/frontend -- curl -s -H "x-lab-user: tester" http://backend-service/headers
-
-# Test Timeouts (VirtualService routes /delay/* with a 3s timeout)
-# A 2-second delay succeeds:
-kubectl -n ambient-demo exec deploy/frontend -- curl -s http://backend-service/delay/2
-# A 5-second delay is interrupted by the 3s timeout:
-kubectl -n ambient-demo exec deploy/frontend -- curl -s -i http://backend-service/delay/5
-
-# Test Circuit Breaking / Retries (DestinationRule)
-kubectl -n ambient-demo exec deploy/frontend -- curl -s -o /dev/null -w "%{http_code}\n" http://backend-service/status/500
+# Test basic connectivity to reviews service
+kubectl -n bookinfo exec deploy/ratings-v1 -- curl -s http://reviews:9080/reviews/0
 ```

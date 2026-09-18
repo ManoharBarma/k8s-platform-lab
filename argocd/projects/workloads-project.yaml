@@ -7,15 +7,15 @@ metadata:
     app.kubernetes.io/name: workloads-project
     app.kubernetes.io/part-of: k8s-platform-lab
 spec:
-  description: "Argo CD Project for workload applications (e.g. ambient-demo)"
+  description: "Argo CD Project for workload applications (e.g. bookinfo)"
   
   # Only allow application manifests from this lab repository
   sourceRepos:
     - "https://github.com/ManoharBarma/k8s-platform-lab.git"
 
-  # Strictly limited to ambient-demo namespace
+  # Strictly limited to bookinfo namespace
   destinations:
-    - namespace: ambient-demo
+    - namespace: bookinfo
       server: https://kubernetes.default.svc
 
   # Allow creating namespaces for applications

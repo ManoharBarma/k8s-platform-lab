@@ -1,27 +1,26 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: ambient-demo
+  name: bookinfo
   namespace: argocd
   annotations:
-    # Sync Wave 1: Deploy base application workloads first
     argocd.argoproj.io/sync-wave: "1"
   labels:
-    app.kubernetes.io/name: ambient-demo
+    app.kubernetes.io/name: bookinfo
     app.kubernetes.io/part-of: k8s-platform-lab
 spec:
   project: workloads-project
   source:
     repoURL: https://github.com/ManoharBarma/k8s-platform-lab.git
     targetRevision: HEAD
-    path: workloads/ambient-demo
+    path: workloads/bookinfo
   destination:
     server: https://kubernetes.default.svc
-    namespace: ambient-demo
+    namespace: bookinfo
   syncPolicy:
     automated:
       prune: true
       selfHeal: true
     syncOptions:
       - CreateNamespace=true
-      - SkipDryRunOnMissingResource=true
+      - ServerSideApply=true
