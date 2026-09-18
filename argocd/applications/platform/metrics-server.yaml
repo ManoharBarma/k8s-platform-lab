@@ -3,8 +3,6 @@ kind: Application
 metadata:
   name: metrics-server
   namespace: argocd
-  annotations:
-    argocd.argoproj.io/sync-wave: "-1"
   labels:
     app.kubernetes.io/name: metrics-server
     app.kubernetes.io/part-of: k8s-platform-lab
