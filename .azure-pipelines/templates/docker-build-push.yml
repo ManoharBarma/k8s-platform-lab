@@ -14,7 +14,7 @@ steps:
       containerRegistry: 'ghcr-connection'
       repository: '${{ parameters.imageRepository }}'
       command: 'buildAndPush'
-      Dockerfile: 'banking-microservices-src/services/${{ parameters.serviceName }}/Dockerfile'
+      Dockerfile: 'banking-microservices-src/${{ parameters.serviceName }}/Dockerfile'
       buildContext: 'banking-microservices-src/'
       tags: |
         latest
