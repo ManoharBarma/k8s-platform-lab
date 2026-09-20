@@ -83,6 +83,6 @@ require (
 	google.golang.org/protobuf v1.36.11 // indirect
 )
 
-replace banking-platform/pkg => ../../pkg
+replace banking-platform/pkg => ../pkg
 
-replace banking-platform/proto => ../../proto
+replace banking-platform/proto => ../proto
