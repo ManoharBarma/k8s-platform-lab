@@ -1,0 +1,38 @@
+serviceName: support-service
+deploymentName: support-service-deployment
+namespace: banking-app
+image: ghcr.io/manoharbarma/support-service:latest
+replicas: 1
+minReplicas: 1
+maxReplicas: 5
+port: 8080
+serviceType: ClusterIP
+
+env:
+  environment: development
+  logLevel: info
+  logFormat: json
+
+db:
+  host: postgres
+  port: "5432"
+  name: banking
+  sslmode: disable
+
+redis:
+  servicename: redis
+  port: 6379
+
+kafka:
+  brokers: "kafka:9092"
+
+otel:
+  enabled: "true"
+  endpoint: "otel-collector.observability.svc.cluster.local:4317"
+  insecure: "true"
+
+secrets:
+  dbUser: banking
+  dbPassword: banking
+  jwtSecret: dev-secret-change-me
+  jwtIssuer: banking-platform

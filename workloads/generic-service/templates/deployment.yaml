@@ -1,0 +1,67 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.deploymentName }}
+  namespace: {{ .Values.namespace }}
+  labels:
+    app: {{ .Values.serviceName }}
+    app.kubernetes.io/part-of: banking-platform
+spec:
+  replicas: {{ .Values.replicas }}
+  selector:
+    matchLabels:
+      app: {{ .Values.serviceName }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.serviceName }}
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "{{ .Values.port }}"
+        prometheus.io/path: "/metrics"
+    spec:
+      enableServiceLinks: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 65532
+        fsGroup: 65532
+      containers:
+        - name: {{ .Values.serviceName }}
+          image: {{ .Values.image }}
+          imagePullPolicy: {{ .Values.imagePullPolicy }}
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop: ["ALL"]
+          ports:
+            - name: http
+              containerPort: {{ .Values.port }}
+            {{- if .Values.grpcPort }}
+            - name: grpc
+              containerPort: {{ .Values.grpcPort }}
+            {{- end }}
+          envFrom:
+            - configMapRef:
+                name: {{ .Values.serviceName }}-config
+            - secretRef:
+                name: {{ .Values.serviceName }}-secret
+          resources:
+            requests:
+              cpu: 25m
+              memory: 48Mi
+            limits:
+              cpu: "1"
+              memory: 192Mi
+          readinessProbe:
+            httpGet: { path: /readyz, port: {{ .Values.port }} }
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            httpGet: { path: /healthz, port: {{ .Values.port }} }
+            initialDelaySeconds: 10
+            periodSeconds: 15
+          startupProbe:
+            httpGet: { path: /startupz, port: {{ .Values.port }} }
+            failureThreshold: 40
+            periodSeconds: 3

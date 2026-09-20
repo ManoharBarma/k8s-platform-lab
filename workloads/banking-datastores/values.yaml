@@ -1,0 +1,28 @@
+namespace: banking-app
+db:
+  name: banking
+  host: postgres
+  port: "5432"
+  sslmode: disable
+redis:
+  name: redis
+  servicename: redis
+  image: redis:7-alpine
+  port: 6379
+kafka:
+  name: kafka
+  servicename: kafka
+  image: apache/kafka:3.8.1
+  brokers: "kafka:9092"
+  storage: 2Gi
+  storageClass: ""
+postgres:
+  name: postgres
+  servicename: postgres
+  image: postgres:16-alpine
+  port: 5432
+  storage: 2Gi
+  storageClass: ""
+secrets:
+  dbUser: banking
+  dbPassword: banking
