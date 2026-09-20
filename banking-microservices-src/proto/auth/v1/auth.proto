@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+package auth.v1;
+
+option go_package = "banking-platform/proto/gen/auth/v1;authv1";
+
+// AuthService exposes internal token validation over gRPC so edge/services can
+// authenticate requests via auth-service (in addition to stateless local JWT
+// validation).
+service AuthService {
+  // ValidateToken verifies an access token and returns the identity it carries.
+  rpc ValidateToken(ValidateTokenRequest) returns (ValidateTokenResponse);
+}
+
+message ValidateTokenRequest {
+  string access_token = 1;
+}
+
+message ValidateTokenResponse {
+  bool valid = 1;
+  string subject = 2;
+  string email = 3;
+  repeated string roles = 4;
+}

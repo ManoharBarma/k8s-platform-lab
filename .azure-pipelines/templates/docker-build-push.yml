@@ -1,0 +1,21 @@
+parameters:
+  - name: serviceName
+    type: string
+  - name: registry
+    type: string
+    default: 'ghcr.io'
+  - name: imageRepository
+    type: string
+
+steps:
+  - task: Docker@2
+    displayName: Build and Push ${{ parameters.serviceName }}
+    inputs:
+      containerRegistry: 'ghcr-connection'
+      repository: '${{ parameters.imageRepository }}'
+      command: 'buildAndPush'
+      Dockerfile: 'banking-microservices-src/services/${{ parameters.serviceName }}/Dockerfile'
+      buildContext: 'banking-microservices-src/'
+      tags: |
+        latest
+        $(Build.BuildId)

@@ -1,0 +1,51 @@
+# Binaries
+bin/
+dist/
+*.exe
+*.out
+app
+
+# Go
+vendor/
+go.work.sum
+coverage.out
+*.test
+
+# Node / frontend
+node_modules/
+frontend/dist/
+frontend/build/
+npm-debug.log*
+
+# Env / secrets
+.env
+*.local
+
+# Editors
+.idea/
+.vscode/
+*.swp
+
+# OS
+.DS_Store
+
+# Terraform (added in later phases)
+**/.terraform/*
+*.tfstate
+*.tfstate.*
+crash.log
+*.tfvars
+!*.tfvars.example
+.terraform.lock.hcl
+
+# Build/cache
+.cache/
+tmp/
+
+# Local-only notes (never pushed)
+PROJECT_PROGRESS.md
+docs/aws/RUNBOOK.md
+
+# Terraform plan output files
+tfplan
+*.tfplan

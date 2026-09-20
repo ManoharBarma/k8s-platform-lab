@@ -1,0 +1,41 @@
+// Go workspace tying the shared platform kit (pkg), the protobuf module (proto)
+// and every microservice module together. New services are added here as they
+// are created.
+go 1.25
+
+use (
+	./pkg
+	./proto
+	./templates/service-template
+	./services/auth-service
+	./services/authz-service
+	./services/customer-service
+	./services/profile-service
+	./services/kyc-service
+	./services/document-service
+	./services/ledger-service
+	./services/account-service
+	./services/transaction-service
+	./services/beneficiary-service
+	./services/payment-service
+	./services/wallet-service
+	./services/loan-service
+	./services/emi-service
+	./services/fixed-deposit-service
+	./services/recurring-deposit-service
+	./services/card-service
+	./services/investment-service
+	./services/currency-exchange-service
+	./services/audit-service
+	./services/notification-service
+	./services/fraud-service
+	./services/statement-service
+	./services/email-service
+	./services/sms-service
+	./services/reports-service
+	./services/analytics-service
+	./services/search-service
+	./services/api-gateway
+	./services/support-service
+	./services/admin-service
+)

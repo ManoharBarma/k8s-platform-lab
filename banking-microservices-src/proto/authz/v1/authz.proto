@@ -1,0 +1,33 @@
+syntax = "proto3";
+
+package authz.v1;
+
+option go_package = "banking-platform/proto/gen/authz/v1;authzv1";
+
+// AuthzService is the platform's central authorization (RBAC) service. Other
+// services call Check synchronously over gRPC to decide whether a subject may
+// perform an action.
+service AuthzService {
+  // Check reports whether subject holds the given permission.
+  rpc Check(CheckRequest) returns (CheckResponse);
+
+  // GetRoles returns the roles assigned to a subject.
+  rpc GetRoles(GetRolesRequest) returns (GetRolesResponse);
+}
+
+message CheckRequest {
+  string subject = 1;
+  string permission = 2;
+}
+
+message CheckResponse {
+  bool allowed = 1;
+}
+
+message GetRolesRequest {
+  string subject = 1;
+}
+
+message GetRolesResponse {
+  repeated string roles = 1;
+}

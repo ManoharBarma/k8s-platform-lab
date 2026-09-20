@@ -1,0 +1,278 @@
+trigger:
+  branches:
+    include:
+      - main
+  paths:
+    include:
+      - banking-microservices-src/**
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+variables:
+  registry: 'ghcr.io'
+  github_username: 'manoharbarma'
+
+jobs:
+  - job: build_frontend
+    displayName: Build Frontend
+    steps:
+      - task: Docker@2
+        displayName: Build and Push Frontend
+        inputs:
+          containerRegistry: 'ghcr-connection'
+          repository: '$(github_username)/frontend'
+          command: 'buildAndPush'
+          Dockerfile: 'banking-microservices-src/frontend/Dockerfile'
+          buildContext: 'banking-microservices-src/frontend'
+          tags: |
+            latest
+            $(Build.BuildId)
+
+  - job: build_account_service
+    displayName: Build account-service
+    steps:
+      - template: .azure-pipelines/templates/docker-build-push.yml
+        parameters:
+          serviceName: account-service
+          imageRepository: $(github_username)/account-service
+
+  - job: build_admin_service
+    displayName: Build admin-service
+    steps:
+      - template: .azure-pipelines/templates/docker-build-push.yml
+        parameters:
+          serviceName: admin-service
+          imageRepository: $(github_username)/admin-service
+
+  - job: build_analytics_service
+    displayName: Build analytics-service
+    steps:
+      - template: .azure-pipelines/templates/docker-build-push.yml
+        parameters:
+          serviceName: analytics-service
+          imageRepository: $(github_username)/analytics-service
+
+  - job: build_api_gateway
+    displayName: Build api-gateway
+    steps:
+      - template: .azure-pipelines/templates/docker-build-push.yml
+        parameters:
+          serviceName: api-gateway
+          imageRepository: $(github_username)/api-gateway
+
+  - job: build_audit_service
+    displayName: Build audit-service
+    steps:
+      - template: .azure-pipelines/templates/docker-build-push.yml
+        parameters:
+          serviceName: audit-service
+          imageRepository: $(github_username)/audit-service
+
+  - job: build_auth_service
+    displayName: Build auth-service
+    steps:
+      - template: .azure-pipelines/templates/docker-build-push.yml
+        parameters:
+          serviceName: auth-service
+          imageRepository: $(github_username)/auth-service
+
+  - job: build_authz_service
+    displayName: Build authz-service
+    steps:
+      - template: .azure-pipelines/templates/docker-build-push.yml
+        parameters:
+          serviceName: authz-service
+          imageRepository: $(github_username)/authz-service
+
+  - job: build_beneficiary_service
+    displayName: Build beneficiary-service
+    steps:
+      - template: .azure-pipelines/templates/docker-build-push.yml
+        parameters:
+          serviceName: beneficiary-service
+          imageRepository: $(github_username)/beneficiary-service
+
+  - job: build_card_service
+    displayName: Build card-service
+    steps:
+      - template: .azure-pipelines/templates/docker-build-push.yml
+        parameters:
+          serviceName: card-service
+          imageRepository: $(github_username)/card-service
+
+  - job: build_currency_exchange_service
+    displayName: Build currency-exchange-service
+    steps:
+      - template: .azure-pipelines/templates/docker-build-push.yml
+        parameters:
+          serviceName: currency-exchange-service
+          imageRepository: $(github_username)/currency-exchange-service
+
+  - job: build_customer_service
+    displayName: Build customer-service
+    steps:
+      - template: .azure-pipelines/templates/docker-build-push.yml
+        parameters:
+          serviceName: customer-service
+          imageRepository: $(github_username)/customer-service
+
+  - job: build_document_service
+    displayName: Build document-service
+    steps:
+      - template: .azure-pipelines/templates/docker-build-push.yml
+        parameters:
+          serviceName: document-service
+          imageRepository: $(github_username)/document-service
+
+  - job: build_email_service
+    displayName: Build email-service
+    steps:
+      - template: .azure-pipelines/templates/docker-build-push.yml
+        parameters:
+          serviceName: email-service
+          imageRepository: $(github_username)/email-service
+
+  - job: build_emi_service
+    displayName: Build emi-service
+    steps:
+      - template: .azure-pipelines/templates/docker-build-push.yml
+        parameters:
+          serviceName: emi-service
+          imageRepository: $(github_username)/emi-service
+
+  - job: build_fixed_deposit_service
+    displayName: Build fixed-deposit-service
+    steps:
+      - template: .azure-pipelines/templates/docker-build-push.yml
+        parameters:
+          serviceName: fixed-deposit-service
+          imageRepository: $(github_username)/fixed-deposit-service
+
+  - job: build_fraud_service
+    displayName: Build fraud-service
+    steps:
+      - template: .azure-pipelines/templates/docker-build-push.yml
+        parameters:
+          serviceName: fraud-service
+          imageRepository: $(github_username)/fraud-service
+
+  - job: build_investment_service
+    displayName: Build investment-service
+    steps:
+      - template: .azure-pipelines/templates/docker-build-push.yml
+        parameters:
+          serviceName: investment-service
+          imageRepository: $(github_username)/investment-service
+
+  - job: build_kyc_service
+    displayName: Build kyc-service
+    steps:
+      - template: .azure-pipelines/templates/docker-build-push.yml
+        parameters:
+          serviceName: kyc-service
+          imageRepository: $(github_username)/kyc-service
+
+  - job: build_ledger_service
+    displayName: Build ledger-service
+    steps:
+      - template: .azure-pipelines/templates/docker-build-push.yml
+        parameters:
+          serviceName: ledger-service
+          imageRepository: $(github_username)/ledger-service
+
+  - job: build_loan_service
+    displayName: Build loan-service
+    steps:
+      - template: .azure-pipelines/templates/docker-build-push.yml
+        parameters:
+          serviceName: loan-service
+          imageRepository: $(github_username)/loan-service
+
+  - job: build_notification_service
+    displayName: Build notification-service
+    steps:
+      - template: .azure-pipelines/templates/docker-build-push.yml
+        parameters:
+          serviceName: notification-service
+          imageRepository: $(github_username)/notification-service
+
+  - job: build_payment_service
+    displayName: Build payment-service
+    steps:
+      - template: .azure-pipelines/templates/docker-build-push.yml
+        parameters:
+          serviceName: payment-service
+          imageRepository: $(github_username)/payment-service
+
+  - job: build_profile_service
+    displayName: Build profile-service
+    steps:
+      - template: .azure-pipelines/templates/docker-build-push.yml
+        parameters:
+          serviceName: profile-service
+          imageRepository: $(github_username)/profile-service
+
+  - job: build_recurring_deposit_service
+    displayName: Build recurring-deposit-service
+    steps:
+      - template: .azure-pipelines/templates/docker-build-push.yml
+        parameters:
+          serviceName: recurring-deposit-service
+          imageRepository: $(github_username)/recurring-deposit-service
+
+  - job: build_reports_service
+    displayName: Build reports-service
+    steps:
+      - template: .azure-pipelines/templates/docker-build-push.yml
+        parameters:
+          serviceName: reports-service
+          imageRepository: $(github_username)/reports-service
+
+  - job: build_search_service
+    displayName: Build search-service
+    steps:
+      - template: .azure-pipelines/templates/docker-build-push.yml
+        parameters:
+          serviceName: search-service
+          imageRepository: $(github_username)/search-service
+
+  - job: build_sms_service
+    displayName: Build sms-service
+    steps:
+      - template: .azure-pipelines/templates/docker-build-push.yml
+        parameters:
+          serviceName: sms-service
+          imageRepository: $(github_username)/sms-service
+
+  - job: build_statement_service
+    displayName: Build statement-service
+    steps:
+      - template: .azure-pipelines/templates/docker-build-push.yml
+        parameters:
+          serviceName: statement-service
+          imageRepository: $(github_username)/statement-service
+
+  - job: build_support_service
+    displayName: Build support-service
+    steps:
+      - template: .azure-pipelines/templates/docker-build-push.yml
+        parameters:
+          serviceName: support-service
+          imageRepository: $(github_username)/support-service
+
+  - job: build_transaction_service
+    displayName: Build transaction-service
+    steps:
+      - template: .azure-pipelines/templates/docker-build-push.yml
+        parameters:
+          serviceName: transaction-service
+          imageRepository: $(github_username)/transaction-service
+
+  - job: build_wallet_service
+    displayName: Build wallet-service
+    steps:
+      - template: .azure-pipelines/templates/docker-build-push.yml
+        parameters:
+          serviceName: wallet-service
+          imageRepository: $(github_username)/wallet-service

@@ -1,0 +1,60 @@
+syntax = "proto3";
+
+package ledger.v1;
+
+option go_package = "banking-platform/proto/gen/ledger/v1;ledgerv1";
+
+// LedgerService is the double-entry bookkeeping engine and the source of truth
+// for money. All monetary amounts are exact decimal strings (e.g. "100.50").
+service LedgerService {
+  // OpenAccount creates a ledger account for a bank account.
+  rpc OpenAccount(OpenAccountRequest) returns (OpenAccountResponse);
+
+  // PostTransaction atomically records a set of balanced entries. It is
+  // idempotent on idempotency_key.
+  rpc PostTransaction(PostTransactionRequest) returns (PostTransactionResponse);
+
+  // GetBalance returns the current balance of a ledger account.
+  rpc GetBalance(GetBalanceRequest) returns (GetBalanceResponse);
+}
+
+enum Direction {
+  DIRECTION_UNSPECIFIED = 0;
+  DIRECTION_DEBIT = 1;
+  DIRECTION_CREDIT = 2;
+}
+
+message Entry {
+  string account_id = 1;
+  Direction direction = 2;
+  string amount = 3; // exact decimal string
+}
+
+message OpenAccountRequest {
+  string account_id = 1;
+  string currency = 2;
+}
+message OpenAccountResponse {
+  string account_id = 1;
+}
+
+message PostTransactionRequest {
+  string transaction_id = 1;
+  string idempotency_key = 2;
+  string currency = 3;
+  repeated Entry entries = 4;
+  string reference = 5;
+}
+message PostTransactionResponse {
+  string transaction_id = 1;
+  bool duplicate = 2; // true when the idempotency key was already applied
+}
+
+message GetBalanceRequest {
+  string account_id = 1;
+}
+message GetBalanceResponse {
+  string account_id = 1;
+  string balance = 2;
+  string currency = 3;
+}

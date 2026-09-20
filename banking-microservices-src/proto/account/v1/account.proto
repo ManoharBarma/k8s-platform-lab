@@ -1,0 +1,23 @@
+syntax = "proto3";
+
+package account.v1;
+
+option go_package = "banking-platform/proto/gen/account/v1;accountv1";
+
+// AccountService lets other services look up bank account details (e.g. to
+// validate ownership and currency before moving money).
+service AccountService {
+  rpc GetAccount(GetAccountRequest) returns (GetAccountResponse);
+}
+
+message GetAccountRequest {
+  string account_id = 1;
+}
+
+message GetAccountResponse {
+  string account_id = 1;
+  string account_number = 2;
+  string customer_id = 3;
+  string currency = 4;
+  string status = 5;
+}
