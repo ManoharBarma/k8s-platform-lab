@@ -4,7 +4,7 @@
 # ConfigMap + Secret + HPA). CI patches each rebuilt service's `image:` string.
 # =============================================================================
 
-namespace: banking-app
+namespace: banking
 imagePullPolicy: IfNotPresent
 env:
   environment: development
@@ -329,7 +329,8 @@ apiGateway:
   image: 118178010323.dkr.ecr.us-east-1.amazonaws.com/banking-platform:api-gateway-e5ba34751daa
   replicas: 1
   port: 8080
-  serviceType: ClusterIP
+  serviceType: NodePort
+  nodePort: 30080
   corsAllowedOrigins: "*"
   hpa: api-gateway-hpa
   minReplicas: 1
@@ -340,7 +341,8 @@ frontend:
   image: 118178010323.dkr.ecr.us-east-1.amazonaws.com/banking-platform:frontend-e5ba34751daa
   replicas: 1
   port: 8080
-  serviceType: ClusterIP
+  serviceType: NodePort
+  nodePort: 30081
   hpa: frontend-hpa
   minReplicas: 1
   maxReplicas: 4
@@ -360,8 +362,8 @@ postgres:
 # ---------------------------------------------------------------------------
 ingress:
   enabled: true
-  className: nginx
-  host: banking.local
-  tls: false
-  tlsSecretName: ""
-  clusterIssuer: ""
+  className: traefik
+  host: vijaygiduthuri.in
+  tls: true # cert-manager auto-issues banking-tls via ingress-shim
+  tlsSecretName: banking-tls
+  clusterIssuer: letsencrypt-prod
