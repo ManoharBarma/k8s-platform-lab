@@ -206,7 +206,7 @@ data:
           "title": "TCP Bytes Received",
           "type": "timeseries",
           "targets": [{
-            "expr": "round(sum(irate(istio_tcp_received_bytes_total{destination_service_namespace=\"ambient-demo\"}[5m])) by (destination_workload), 0.001)",
+            "expr": "round(sum(irate(istio_tcp_received_bytes_total{destination_service_namespace=\"banking-app\"}[5m])) by (destination_workload), 0.001)",
             "legendFormat": "{{destination_workload}}"
           }]
         },
@@ -222,7 +222,7 @@ data:
           "title": "TCP Connections Opened",
           "type": "timeseries",
           "targets": [{
-            "expr": "round(sum(irate(istio_tcp_connections_opened_total{destination_service_namespace=\"ambient-demo\"}[5m])) by (destination_workload, source_workload), 0.001)",
+            "expr": "round(sum(irate(istio_tcp_connections_opened_total{destination_service_namespace=\"banking-app\"}[5m])) by (destination_workload, source_workload), 0.001)",
             "legendFormat": "{{source_workload}} → {{destination_workload}}"
           }]
         }

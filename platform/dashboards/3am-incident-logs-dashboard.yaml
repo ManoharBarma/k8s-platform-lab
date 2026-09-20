@@ -156,7 +156,7 @@ data:
             "type": "custom",
             "options": [
               { "selected": true, "text": "All Namespaces", "value": ".*" },
-              { "selected": false, "text": "ambient-demo", "value": "ambient-demo" },
+              { "selected": false, "text": "banking-app", "value": "banking-app" },
               { "selected": false, "text": "istio-system", "value": "istio-system" },
               { "selected": false, "text": "monitoring", "value": "monitoring" }
             ]

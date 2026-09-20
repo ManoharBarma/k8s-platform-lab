@@ -1,17 +1,17 @@
 apiVersion: security.istio.io/v1
 kind: AuthorizationPolicy
 metadata:
-  name: backend-authz
-  namespace: ambient-demo
+  name: api-gateway-authz
+  namespace: banking-app
   labels:
-    app.kubernetes.io/name: backend-authz
-    app.kubernetes.io/part-of: ambient-demo
+    app.kubernetes.io/name: api-gateway-authz
+    app.kubernetes.io/part-of: banking-app
 spec:
   selector:
     matchLabels:
-      app: backend
+      app: api-gateway
   action: ALLOW
   rules:
     - to:
         - operation:
-            ports: ["80"]
+            ports: ["8080"]

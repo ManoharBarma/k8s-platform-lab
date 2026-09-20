@@ -7,15 +7,15 @@ metadata:
     app.kubernetes.io/name: workloads-project
     app.kubernetes.io/part-of: k8s-platform-lab
 spec:
-  description: "Argo CD Project for workload applications (e.g. ambient-demo)"
+  description: "Argo CD Project for workload applications (e.g. banking-app)"
   
   # Only allow application manifests from this lab repository
   sourceRepos:
     - "https://github.com/ManoharBarma/k8s-platform-lab.git"
 
-  # Strictly limited to ambient-demo namespace
+  # Strictly limited to banking-app namespace
   destinations:
-    - namespace: ambient-demo
+    - namespace: banking-app
       server: https://kubernetes.default.svc
 
   # Allow creating namespaces for applications
@@ -33,9 +33,15 @@ spec:
       kind: Service
     - group: ""
       kind: ServiceAccount
+    - group: ""
+      kind: PersistentVolumeClaim
     - group: "apps"
       kind: Deployment
+    - group: "apps"
+      kind: StatefulSet
     - group: "networking.k8s.io"
       kind: Ingress
+    - group: "autoscaling"
+      kind: HorizontalPodAutoscaler
     - group: "gateway.networking.k8s.io"
       kind: "*"
