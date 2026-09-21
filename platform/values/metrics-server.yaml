@@ -1,9 +1,17 @@
-replicas: 3
+replicas: 1
 
 args:
   - --kubelet-insecure-tls
-  - --kubelet-preferred-address-types=InternalIP,Hostname
+  - --kubelet-preferred-address-types=InternalIP,ExternalIP,Hostname
+  - --metric-resolution=15s
 
 podDisruptionBudget:
-  enabled: true
-  minAvailable: 2
+  enabled: false
+
+resources:
+  requests:
+    cpu: 50m
+    memory: 64Mi
+  limits:
+    cpu: 500m
+    memory: 256Mi
