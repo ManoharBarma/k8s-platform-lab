@@ -1,0 +1,46 @@
+name: Publish Helm Chart Template to GHCR
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'workloads/banking-app-standard-template/**'
+      - '.github/workflows/publish-chart.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  publish-helm-chart:
+    name: Package and Push Helm Chart to GHCR
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set lowercased repo owner
+        id: owner
+        run: echo "owner=${GITHUB_REPOSITORY_OWNER,,}" >> $GITHUB_OUTPUT
+
+      - name: Set up Helm
+        uses: azure/setup-helm@v4
+        with:
+          version: 'latest'
+
+      - name: Log in to GitHub Container Registry (GHCR)
+        run: |
+          echo "${{ secrets.GITHUB_TOKEN }}" | helm registry login ghcr.io --username "${{ github.actor }}" --password-stdin
+
+      - name: Package Helm Chart
+        run: |
+          mkdir -p dist
+          helm package workloads/banking-app-standard-template --destination dist/
+
+      - name: Push Helm Chart OCI to GHCR
+        run: |
+          for pkg in dist/*.tgz; do
+            echo "Pushing $pkg to oci://ghcr.io/${{ steps.owner.outputs.owner }}..."
+            helm push "$pkg" "oci://ghcr.io/${{ steps.owner.outputs.owner }}"
+          done
