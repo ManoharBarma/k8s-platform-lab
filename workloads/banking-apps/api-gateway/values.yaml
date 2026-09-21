@@ -7,8 +7,7 @@ replicas: 1
 minReplicas: 1
 maxReplicas: 5
 port: 8080
-serviceType: NodePort
-nodePort: 30080
+serviceType: ClusterIP
 corsAllowedOrigins: "*"
 
 env:

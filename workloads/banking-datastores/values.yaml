@@ -30,3 +30,6 @@ postgres:
 secrets:
   dbUser: banking
   dbPassword: banking
+
+waypoint:
+  enabled: false
