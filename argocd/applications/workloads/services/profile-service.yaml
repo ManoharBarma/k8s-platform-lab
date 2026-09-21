@@ -1,0 +1,30 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: profile-service
+  namespace: argocd
+  labels:
+    app.kubernetes.io/part-of: nexus-core-banking
+spec:
+  project: workloads-project
+  sources:
+    - repoURL: ghcr.io/manoharbarma
+      chart: nexus-core-banking
+      targetRevision: 1.0.1
+      helm:
+        releaseName: profile-service
+        valueFiles:
+          - $values/workloads/banking-apps/profile-service/values.yaml
+    - repoURL: https://github.com/ManoharBarma/k8s-platform-lab.git
+      targetRevision: HEAD
+      ref: values
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: banking-app
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true
