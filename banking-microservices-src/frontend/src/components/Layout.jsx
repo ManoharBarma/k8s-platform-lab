@@ -22,7 +22,7 @@ export default function Layout() {
   return (
     <div className="app">
       <aside className="sidebar">
-        <div className="brand">🏦 Banking</div>
+        <div className="brand">🏦 Nexus Bank</div>
         <nav>
           {links.map(([to, label]) => (
             <NavLink key={to} to={to} end={to === '/'} className={({ isActive }) => (isActive ? 'active' : '')}>

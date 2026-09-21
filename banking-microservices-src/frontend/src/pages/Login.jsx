@@ -27,7 +27,7 @@ export default function Login() {
   return (
     <div className="auth-page">
       <form className="card auth-card" onSubmit={onSubmit}>
-        <h1>🏦 Banking Platform</h1>
+        <h1>🏦 Nexus Core Banking</h1>
         <h2>Sign in</h2>
         {error && <div className="error">{error}</div>}
         <label>Email<input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required /></label>

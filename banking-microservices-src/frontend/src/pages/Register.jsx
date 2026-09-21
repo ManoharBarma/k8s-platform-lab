@@ -28,7 +28,7 @@ export default function Register() {
   return (
     <div className="auth-page">
       <form className="card auth-card" onSubmit={onSubmit}>
-        <h1>🏦 Banking Platform</h1>
+        <h1>🏦 Nexus Core Banking</h1>
         <h2>Create account</h2>
         {error && <div className="error">{error}</div>}
         <label>Full name<input value={fullName} onChange={(e) => setFullName(e.target.value)} /></label>
