@@ -1,4 +1,9 @@
 replicas: 3
+
 args:
   - --kubelet-insecure-tls
   - --kubelet-preferred-address-types=InternalIP,Hostname
+
+podDisruptionBudget:
+  enabled: true
+  minAvailable: 2
