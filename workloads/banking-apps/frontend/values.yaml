@@ -2,37 +2,33 @@ serviceName: frontend
 deploymentName: frontend-deployment
 namespace: banking-app
 image: ghcr.io/manoharbarma/frontend:latest
+imagePullPolicy: IfNotPresent
 replicas: 1
 minReplicas: 1
 maxReplicas: 4
 port: 8080
 serviceType: NodePort
+nodePort: 30081
+
+# Frontend HTTP probe paths (SPA index)
+readinessPath: /
+livenessPath: /
+startupProbeEnabled: false
+
+# Nginx needs standard privileges to run and write cache
+podSecurityContext: {}
+containerSecurityContext:
+  allowPrivilegeEscalation: false
+  readOnlyRootFilesystem: false
 
 env:
   environment: development
   logLevel: info
   logFormat: json
 
-db:
-  host: postgres
-  port: "5432"
-  name: banking
-  sslmode: disable
+db: {}
+redis: {}
+kafka: {}
+otel: {}
+secrets: {}
 
-redis:
-  servicename: redis
-  port: 6379
-
-kafka:
-  brokers: "kafka:9092"
-
-otel:
-  enabled: "true"
-  endpoint: "otel-collector.observability.svc.cluster.local:4317"
-  insecure: "true"
-
-secrets:
-  dbUser: banking
-  dbPassword: banking
-  jwtSecret: dev-secret-change-me
-  jwtIssuer: banking-platform
