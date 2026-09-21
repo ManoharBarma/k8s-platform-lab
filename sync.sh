@@ -9,6 +9,9 @@ kubectl apply -f argocd/projects/
 echo "🛠️  2. Applying Platform Applications (Prometheus, Grafana, Istio, etc.)..."
 kubectl apply -f argocd/applications/platform/
 
+echo "Sleep for 3mins"
+sleep 180
+
 echo "📦 3. Applying Workload Applications (Banking App)..."
 kubectl apply -f argocd/applications/workloads/
 
