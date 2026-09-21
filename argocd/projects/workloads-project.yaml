@@ -9,9 +9,11 @@ metadata:
 spec:
   description: "Argo CD Project for workload applications (e.g. banking-app)"
   
-  # Only allow application manifests from this lab repository
+  # Allow application manifests from lab repository and GHCR OCI charts
   sourceRepos:
     - "https://github.com/ManoharBarma/k8s-platform-lab.git"
+    - "ghcr.io/manoharbarma"
+    - "ghcr.io/manoharbarma/*"
 
   # Strictly limited to banking-app namespace
   destinations:
