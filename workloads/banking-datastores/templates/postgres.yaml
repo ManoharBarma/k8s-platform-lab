@@ -43,6 +43,12 @@ spec:
           resources:
             requests: { cpu: 50m, memory: 128Mi }
             limits: { cpu: "1", memory: 512Mi }
+      {{- if not (and .Values.postgres.persistence .Values.postgres.persistence.enabled) }}
+      volumes:
+        - name: data
+          emptyDir: {}
+      {{- end }}
+  {{- if and .Values.postgres.persistence .Values.postgres.persistence.enabled }}
   volumeClaimTemplates:
     - metadata:
         name: data
@@ -54,6 +60,7 @@ spec:
         resources:
           requests:
             storage: {{ .Values.postgres.storage }}
+  {{- end }}
 ---
 apiVersion: v1
 kind: Service

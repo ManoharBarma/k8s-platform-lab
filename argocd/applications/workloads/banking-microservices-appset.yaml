@@ -20,7 +20,7 @@ spec:
       sources:
         - repoURL: ghcr.io/manoharbarma
           chart: nexus-core-banking
-          targetRevision: 1.0.0
+          targetRevision: 1.0.1
           helm:
             releaseName: '{{.path.basename}}'
             valueFiles:

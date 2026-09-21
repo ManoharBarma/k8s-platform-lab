@@ -49,6 +49,12 @@ spec:
           resources:
             requests: { cpu: 100m, memory: 512Mi }
             limits: { cpu: "1", memory: 1Gi }
+      {{- if not (and .Values.kafka.persistence .Values.kafka.persistence.enabled) }}
+      volumes:
+        - name: data
+          emptyDir: {}
+      {{- end }}
+  {{- if and .Values.kafka.persistence .Values.kafka.persistence.enabled }}
   volumeClaimTemplates:
     - metadata:
         name: data
@@ -60,6 +66,7 @@ spec:
         resources:
           requests:
             storage: {{ .Values.kafka.storage }}
+  {{- end }}
 ---
 apiVersion: v1
 kind: Service

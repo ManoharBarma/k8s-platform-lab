@@ -14,6 +14,8 @@ kafka:
   servicename: kafka
   image: apache/kafka:3.8.1
   brokers: "kafka:9092"
+  persistence:
+    enabled: false
   storage: 2Gi
   storageClass: ""
 postgres:
@@ -21,6 +23,8 @@ postgres:
   servicename: postgres
   image: postgres:16-alpine
   port: 5432
+  persistence:
+    enabled: false
   storage: 2Gi
   storageClass: ""
 secrets:
