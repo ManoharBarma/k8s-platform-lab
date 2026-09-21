@@ -19,7 +19,7 @@ spec:
       project: workloads-project
       sources:
         - repoURL: ghcr.io/manoharbarma
-          chart: banking-app-standard-template
+          chart: nexus-core-banking
           targetRevision: 1.0.0
           helm:
             releaseName: '{{.path.basename}}'
