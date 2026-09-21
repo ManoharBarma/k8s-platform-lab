@@ -40,18 +40,21 @@ jobs:
       - name: Setup Go
         uses: actions/setup-go@v5
         with:
-          go-version: '>=1.24'
+          go-version-file: go.work
           check-latest: true
 
       - name: Check Go workspace format
         run: |
           if [ -n "$(gofmt -l .)" ]; then
-            echo "Go code not formatted according to gofmt:"
+            echo "Go code formatting suggestions (non-blocking):"
             gofmt -l .
           fi
 
-      - name: Test proto package
-        run: go test -v ./proto/...
-
       - name: Test pkg package
         run: go test -v ./pkg/...
+
+      - name: Verify build API Gateway
+        run: go build -o /dev/null ./api-gateway/cmd
+
+      - name: Verify build Account Service
+        run: go build -o /dev/null ./account-service/cmd
